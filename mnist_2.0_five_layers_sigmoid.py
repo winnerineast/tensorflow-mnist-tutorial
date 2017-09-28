@@ -15,25 +15,26 @@
 
 import tensorflow as tf
 import tensorflowvisu
-from tensorflow.contrib.learn.python.learn.datasets.mnist import read_data_sets
+from tensorflow.examples.tutorials.mnist import input_data as mnist_data
+print("Tensorflow version " + tf.__version__)
 tf.set_random_seed(0)
 
 # neural network with 5 layers
 #
-# · · · · · · · · · ·       (input data, flattened pixels)       X [batch, 784]   # 784 = 28*28
-# \x/x\x/x\x/x\x/x\x/    -- fully connected layer (sigmoid)      W1 [784, 200]      B1[200]
-#  · · · · · · · · ·                                             Y1 [batch, 200]
-#   \x/x\x/x\x/x\x/      -- fully connected layer (sigmoid)      W2 [200, 100]      B2[100]
-#    · · · · · · ·                                               Y2 [batch, 100]
-#    \x/x\x/x\x/         -- fully connected layer (sigmoid)      W3 [100, 60]       B3[60]
-#     · · · · ·                                                  Y3 [batch, 60]
-#     \x/x\x/            -- fully connected layer (sigmoid)      W4 [60, 30]        B4[30]
-#      · · ·                                                     Y4 [batch, 30]
-#      \x/               -- fully connected layer (softmax)      W5 [30, 10]        B5[10]
-#       ·                                                        Y5 [batch, 10]
+# · · · · · · · · · ·          (input data, flattened pixels)       X [batch, 784]   # 784 = 28*28
+# \x/x\x/x\x/x\x/x\x/       -- fully connected layer (sigmoid)      W1 [784, 200]      B1[200]
+#  · · · · · · · · ·                                                Y1 [batch, 200]
+#   \x/x\x/x\x/x\x/         -- fully connected layer (sigmoid)      W2 [200, 100]      B2[100]
+#    · · · · · · ·                                                  Y2 [batch, 100]
+#     \x/x\x/x\x/           -- fully connected layer (sigmoid)      W3 [100, 60]       B3[60]
+#      · · · · ·                                                    Y3 [batch, 60]
+#       \x/x\x/             -- fully connected layer (sigmoid)      W4 [60, 30]        B4[30]
+#        · · ·                                                      Y4 [batch, 30]
+#         \x/               -- fully connected layer (softmax)      W5 [30, 10]        B5[10]
+#          ·                                                        Y5 [batch, 10]
 
 # Download images and labels into mnist.test (10K images+labels) and mnist.train (60K images+labels)
-mnist = read_data_sets("data", one_hot=True, reshape=False, validation_size=0)
+mnist = mnist_data.read_data_sets("data", one_hot=True, reshape=False, validation_size=0)
 
 # input X: 28x28 grayscale images, the first dimension (None) will index the images in the mini-batch
 X = tf.placeholder(tf.float32, [None, 28, 28, 1])

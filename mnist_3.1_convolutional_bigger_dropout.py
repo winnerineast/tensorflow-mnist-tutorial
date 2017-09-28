@@ -16,11 +16,12 @@
 import tensorflow as tf
 import tensorflowvisu
 import math
-from tensorflow.contrib.learn.python.learn.datasets.mnist import read_data_sets
+from tensorflow.examples.tutorials.mnist import input_data as mnist_data
+print("Tensorflow version " + tf.__version__)
 tf.set_random_seed(0)
 
 # Download images and labels into mnist.test (10K images+labels) and mnist.train (60K images+labels)
-mnist = read_data_sets("data", one_hot=True, reshape=False, validation_size=0)
+mnist = mnist_data.read_data_sets("data", one_hot=True, reshape=False, validation_size=0)
 
 # neural network structure for this sample:
 #
@@ -34,7 +35,7 @@ mnist = read_data_sets("data", one_hot=True, reshape=False, validation_size=0)
 #      \x/x\x\x/ ✞      -- fully connected layer (relu+dropout) W4 [7*7*24, 200]       B4 [200]
 #       · · · ·                                                 Y4 [batch, 200]
 #       \x/x\x/         -- fully connected layer (softmax)      W5 [200, 10]           B5 [10]
-#        · · ·                                                  Y [batch, 20]
+#        · · ·                                                  Y [batch, 10]
 
 # input X: 28x28 grayscale images, the first dimension (None) will index the images in the mini-batch
 X = tf.placeholder(tf.float32, [None, 28, 28, 1])
@@ -46,7 +47,7 @@ lr = tf.placeholder(tf.float32)
 pkeep = tf.placeholder(tf.float32)
 
 # three convolutional layers with their channel counts, and a
-# fully connected layer (tha last layer has 10 softmax neurons)
+# fully connected layer (the last layer has 10 softmax neurons)
 K = 6  # first convolutional layer output depth
 L = 12  # second convolutional layer output depth
 M = 24  # third convolutional layer

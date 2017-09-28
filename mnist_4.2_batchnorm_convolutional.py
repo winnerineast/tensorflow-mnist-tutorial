@@ -14,14 +14,14 @@
 # limitations under the License.
 
 import tensorflow as tf
-from tensorflow.python.framework import tensor_util
 import tensorflowvisu
 import math
-from tensorflow.contrib.learn.python.learn.datasets.mnist import read_data_sets
+from tensorflow.examples.tutorials.mnist import input_data as mnist_data
+print("Tensorflow version " + tf.__version__)
 tf.set_random_seed(0.0)
 
 # Download images and labels into mnist.test (10K images+labels) and mnist.train (60K images+labels)
-mnist = read_data_sets("data", one_hot=True, reshape=False, validation_size=0)
+mnist = mnist_data.read_data_sets("data", one_hot=True, reshape=False, validation_size=0)
 
 # neural network structure for this sample:
 #
@@ -35,7 +35,7 @@ mnist = read_data_sets("data", one_hot=True, reshape=False, validation_size=0)
 #      \x/x\x\x/ ✞      -- fully connected layer (relu+dropout+BN) W4 [7*7*24, 200]       B4 [200]
 #       · · · ·                                                    Y4 [batch, 200]
 #       \x/x\x/         -- fully connected layer (softmax)         W5 [200, 10]           B5 [10]
-#        · · ·                                                     Y [batch, 20]
+#        · · ·                                                     Y [batch, 10]
 
 # input X: 28x28 grayscale images, the first dimension (None) will index the images in the mini-batch
 X = tf.placeholder(tf.float32, [None, 28, 28, 1])
@@ -57,11 +57,11 @@ def batchnorm(Ylogits, is_test, iteration, offset, convolutional=False):
         mean, variance = tf.nn.moments(Ylogits, [0, 1, 2])
     else:
         mean, variance = tf.nn.moments(Ylogits, [0])
-    update_moving_everages = exp_moving_avg.apply([mean, variance])
+    update_moving_averages = exp_moving_avg.apply([mean, variance])
     m = tf.cond(is_test, lambda: exp_moving_avg.average(mean), lambda: mean)
     v = tf.cond(is_test, lambda: exp_moving_avg.average(variance), lambda: variance)
     Ybn = tf.nn.batch_normalization(Ylogits, m, v, offset, None, bnepsilon)
-    return Ybn, update_moving_everages
+    return Ybn, update_moving_averages
 
 def no_batchnorm(Ylogits, is_test, iteration, offset, convolutional=False):
     return Ylogits, tf.no_op()
